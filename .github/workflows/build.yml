@@ -1,0 +1,27 @@
+name: Build My APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.0'
+      - name: Build APK
+        run: |
+          flutter create darling_app
+          cd darling_app
+          flutter build apk --split-per-abi
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Darling-Voice-Assistant-APK
+          path: darling_app/build/app/outputs/flutter-apk/*
